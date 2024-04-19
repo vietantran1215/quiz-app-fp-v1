@@ -1,47 +1,18 @@
-import { data } from "./data.js";
-
 // CONSTANTS
-const keyPrefix = "question-";
-const startingNum = 9;
-const startingKey = `${keyPrefix}${startingNum}`;
-const controlButtons = [
-  {
-    id: "btn-back",
-    textContent: "Back",
-    questionKeyToHide: [`${keyPrefix}1`],
-    action: (currentQuestion) => {
-      if (currentQuestion.prev) {
-        state.currentKey = currentQuestion.prev;
-      }
-    },
-  },
-  {
-    id: "btn-next",
-    textContent: "Next",
-    questionKeyToHide: [`${keyPrefix}${data.length}`],
-    action: (currentQuestion) => {
-      if (currentQuestion.next) {
-        state.currentKey = currentQuestion.next;
-      }
-    },
-  },
-  {
-    id: "btn-submit",
-    textContent: "Submit",
-    questionKeyToShow: [`${keyPrefix}${data.length}`],
-    action: showResult,
-  },
-];
+export const keyPrefix = "question-";
+export const startingNum = 1;
+export const startingKey = `${keyPrefix}${startingNum}`;
+export const controlButtons = [];
 
 // STATE
-const state = {
+export const state = {
   answerForm: {},
 };
 
 /**
  * @description rendering the current question
  */
-function renderSelectedQuestion (key) {
+export function renderSelectedQuestion(key) {
   document.querySelector("#current-question").innerHTML = "";
 
   // Get the question number
@@ -84,9 +55,9 @@ function renderSelectedQuestion (key) {
   state.answerForm[key].isCurrent = true;
 
   document.querySelector("#current-question").append(h3El, ...answerEl);
-};
+}
 
-function initControlFunctions () {
+export function initControlFunctions() {
   const controlDiv = document.getElementById("control");
   controlDiv.innerHTML = "";
   controlButtons.forEach((btn) => {
@@ -116,12 +87,44 @@ function initControlFunctions () {
     }
     controlDiv.append(btnEl);
   });
-};
+}
 
 /**
  * @description initializing the quiz app
  */
-function start() {
+export async function start() {
+  const res = await fetch("./data/questions.json");
+  const data = await res.json();
+
+  controlButtons.push(
+    {
+      id: "btn-back",
+      textContent: "Back",
+      questionKeyToHide: [`${keyPrefix}1`],
+      action: (currentQuestion) => {
+        if (currentQuestion.prev) {
+          state.currentKey = currentQuestion.prev;
+        }
+      },
+    },
+    {
+      id: "btn-next",
+      textContent: "Next",
+      questionKeyToHide: [`${keyPrefix}${data.length}`],
+      action: (currentQuestion) => {
+        if (currentQuestion.next) {
+          state.currentKey = currentQuestion.next;
+        }
+      },
+    },
+    {
+      id: "btn-submit",
+      textContent: "Submit",
+      questionKeyToShow: [`${keyPrefix}${data.length}`],
+      action: showResult,
+    }
+  );
+
   data.forEach((question, index) => {
     const key = `${keyPrefix}${index + 1}`;
 
@@ -147,12 +150,12 @@ function start() {
   initControlFunctions();
 }
 
-function render() {
+export function render() {
   renderSelectedQuestion(state.currentKey);
   initControlFunctions();
 }
 
-function showResult() {
+export function showResult() {
   let result = 0;
 
   const { answerForm } = state;
@@ -160,13 +163,13 @@ function showResult() {
   for (let key in answerForm) {
     const question = answerForm[key];
     const correctAnswer = question.question.correctAnwser;
-    const correctAnwserString = Array.isArray(correctAnswer) ? correctAnswer.sort().join(''): correctAnswer;
-    const chosenAnswerString = question.chosenAnswer.sort().join('');
+    const correctAnwserString = Array.isArray(correctAnswer)
+      ? correctAnswer.sort().join("")
+      : correctAnswer;
+    const chosenAnswerString = question.chosenAnswer.sort().join("");
     const isCorrect = correctAnwserString === chosenAnswerString;
     if (isCorrect) result++;
   }
 
-  document.querySelector('#result').innerHTML = `Result: ${result}`;
+  document.querySelector("#result").innerHTML = `Result: ${result}`;
 }
-
-start();
