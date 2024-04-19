@@ -16,7 +16,7 @@ body {
   padding: 20px 0;
 }
 
-.app {
+#app {
   width: 83.3333%;
   margin: auto;
 }
@@ -25,4 +25,4 @@ label {
   padding: 4px 0;
 }
 
-/*# sourceMappingURL=index.css.map */
+/*# sourceMappingURL=style.css.map */

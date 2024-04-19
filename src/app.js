@@ -92,7 +92,7 @@ export function initControlFunctions() {
 /**
  * @description initializing the quiz app
  */
-export async function start() {
+export async function launch() {
   const res = await fetch("./data/questions.json");
   const data = await res.json();
 

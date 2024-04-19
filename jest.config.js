@@ -12,6 +12,8 @@ export default {
     "**/*.{js,jsx}",
     "!**/node_modules/**",
     "!src/index.js",
+    "!src/bootstrap.js",
+    "!src/server.js",
     "!**/vendor/**",
     "!**/coverage/**",
   ],

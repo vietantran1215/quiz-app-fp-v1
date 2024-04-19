@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
-import { renderSelectedQuestion, start, startingKey } from "./app";
-import { data } from "./mock-data";
+import { renderSelectedQuestion, launch, startingKey } from "../app";
+import { data } from "../mock-data";
 
 describe("Testing quiz app", () => {
   beforeAll(() => {
@@ -10,7 +10,7 @@ describe("Testing quiz app", () => {
       });
     });
     document.body.innerHTML = `
-      <div class="app">
+      <div id="app">
         <h1>JavaScript Online Quiz</h1>
       
         <div id="current-question" class="question-container"></div>
@@ -19,7 +19,7 @@ describe("Testing quiz app", () => {
         <div id="result" class="result"></div>
       </div>
     `;
-    start();
+    launch();
   });
 
   afterEach(() => {
@@ -28,8 +28,8 @@ describe("Testing quiz app", () => {
 
   test("should render the first question when the page loads", () => {
     expect(fetch).toHaveBeenCalled();
-    const question = document.getElementById('current-question');
-    const questionTitle = question.querySelector('h3').textContent;
+    const question = document.getElementById("current-question");
+    const questionTitle = question.querySelector("h3").textContent;
     expect(questionTitle).toMatch(`Question 1: ${data[0].question}`);
   });
 });
