@@ -11,7 +11,7 @@
     "dev": "npm-run-all --parallel start:watch sass:watch browser:watch",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:cov": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
-    "test:cov:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --watch"
+    "test:cov:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --watchAll"
   },
   "keywords": [],
   "author": "",

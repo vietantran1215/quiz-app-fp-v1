@@ -5,7 +5,7 @@ export const startingKey = `${keyPrefix}${startingNum}`;
 export const controlButtons = [];
 
 // STATE
-export const state = {
+const state = {
   answerForm: {},
 };
 
@@ -25,6 +25,7 @@ export function renderSelectedQuestion(key) {
   const h3El = document.createElement("h3");
   h3El.textContent = `Question ${questionNum}: ${title}`;
 
+  // Show answer options
   const answerEl = Object.keys(answers).map((value) => {
     const text = answers[value];
     const name = key;
@@ -47,6 +48,7 @@ export function renderSelectedQuestion(key) {
     // Create label
     const labelEl = document.createElement("label");
     labelEl.for = id;
+    labelEl.id = `label-${id}`;
     labelEl.classList.add("d-block");
     labelEl.append(input, `${value.toUpperCase()}. ${text}`);
     return labelEl;
@@ -61,32 +63,38 @@ export function initControlFunctions() {
   const controlDiv = document.getElementById("control");
   controlDiv.innerHTML = "";
   controlButtons.forEach((btn) => {
-    const btnEl = document.createElement("button");
-    btnEl.id = btn.id;
-    btnEl.textContent = btn.textContent;
-    btnEl.addEventListener("click", () => {
-      if (btn.id === "btn-submit") {
-        btn.action();
-        showResult();
-      } else {
-        btn.action(state.answerForm[state.currentKey]);
-        render();
-      }
-    });
-    btnEl.style.backgroundColor = btn.backgroundColor;
-    btnEl.style.display = "inline-block";
-    if (btn.questionKeyToShow) {
-      btnEl.style.display = btn.questionKeyToShow.includes(state.currentKey)
-        ? "inline-block"
-        : "none";
+    if (
+      btn.questionKeyToHide &&
+      btn.questionKeyToHide.includes(state.currentKey)
+    ) {
+      return;
     }
-    if (btn.questionKeyToHide) {
-      btnEl.style.display = btn.questionKeyToHide.includes(state.currentKey)
-        ? "none"
-        : "inline-block";
+
+    if (
+      btn.questionKeyToShow &&
+      !btn.questionKeyToShow.includes(state.currentKey)
+    ) {
+      return;
     }
-    controlDiv.append(btnEl);
+
+    showButton(btn, controlDiv);
   });
+}
+
+export function showButton(btn, container) {
+  const btnEl = document.createElement("button");
+  btnEl.id = btn.id;
+  btnEl.textContent = btn.textContent;
+  btnEl.addEventListener("click", () => {
+    if (btn.id === "btn-submit") {
+      btn.action();
+      showResult(state.answerForm);
+    } else {
+      btn.action(state.answerForm[state.currentKey]);
+      render();
+    }
+  });
+  container.append(btnEl);
 }
 
 /**
@@ -155,10 +163,8 @@ export function render() {
   initControlFunctions();
 }
 
-export function showResult() {
+export function showResult(answerForm) {
   let result = 0;
-
-  const { answerForm } = state;
 
   for (let key in answerForm) {
     const question = answerForm[key];
